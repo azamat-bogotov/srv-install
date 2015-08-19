@@ -1,14 +1,14 @@
-# srv-install
-First manipulation and settings after install Ubuntu OS
+## Первоначальная настройка сервера при установке Ubuntu
 ---
 
 ### Сперва настройки редактора *nano*
 В `/etc/nanorc` прописать или расскоментировать значения:
-
-> set autoident
-> set tabsize 4
-> set tabtospaces
-> set undo # где Alt+U - undo, Alt+E - redo
+```conf
+set autoident
+set tabsize 4
+set tabtospaces
+set undo # где Alt+U - undo, Alt+E - redo
+```
 
 ### Системные настройки 
 
@@ -36,7 +36,7 @@ $ sudo apt-get install build-essential
 ```
 
 ### nginx
-Добавление ключа для доступа к репозиторию nginx
+Добавление ключа для доступа к репозиторию *nginx*
 ```sh
 $ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_signing.key; rm nginx_signing.key
 ```
@@ -44,13 +44,13 @@ $ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_sig
 Добавление репозиториев для скачивания последней стабильной версии nginx
 
 > Раскомментировать репозитории `canonical` и `ubuntu` в `/etc/apt/sources.list`, дожны быть в конце файла.
-> 
-> там же в `/etc/apt/sources.list` добавить репозитории nginx:
-> `deb http://nginx.org/packages/ubuntu/ trusty nginx`
-> `deb-src http://nginx.org/packages/ubuntu/ trusty nginx`
 >
-> где *trusty* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*
-
+> там же в `/etc/apt/sources.list` добавить репозитории nginx:
+> ```
+> deb http://nginx.org/packages/ubuntu/ trusty nginx
+> deb-src http://nginx.org/packages/ubuntu/ trusty nginx
+>```
+> где *trusty* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*.
 > Обо все этом подробнее [здесь](http://nginx.org/ru/linux_packages.html#stable)
 
 Обновление репозиториев
@@ -58,13 +58,14 @@ $ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_sig
 $ apt-get update
 ```
 
-> в случае, если будет ошибка вида: 
-> `"Ошибка GPG: http://extras.ubuntu.com trusty Release ... 40976EAF437D05B5"`
-> 
+> В случае, если будет ошибка вида: 
+```
+Ошибка GPG: http://extras.ubuntu.com trusty Release ... 40976EAF437D05B5
+```
 > то следует добавить ключ
-> ```sh
-> $ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5
-> ```
+```sh
+$ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5
+```
 > заменив *40976EAF437D05B5* на выданное в ошибке значение
 
 Обновление библиотек
@@ -74,9 +75,10 @@ $ apt-get upgrade
 
 Увеличение максимально возможного числа открытых файлов (глобально)
 > надо прописать в конце файла `/etc/security/limits.conf`:
-> `* - nofile 1048576`
-
- - - -
+ ```
+* - nofile 1048576
+```
+- - -
 
 ### Создание окружения для сайта. 
 
@@ -172,7 +174,7 @@ $ sudo apt-get install php-pear php5-sqlite php5-redis php5-memcached php5-tidy 
 sudo apt-get install mysql-server-5.6 mysql-client-5.6
 ```
 
-# настройка php-fpm
+### настройка php-fpm
 
 
 ### настройка nginx
