@@ -356,3 +356,10 @@ $ sudo service php5-fpm restart
 $ sudo service mysql restart
 $ sudo service nginx restart
 ```
+
+### Установка последней версии git
+```sh
+$ sudo add-apt-repository ppa:git-core/ppa
+$ sudo apt-get update
+$ sudo apt-get install git
+```
