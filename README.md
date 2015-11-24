@@ -21,7 +21,7 @@ $ passwd root
 Настройка сети и перезапуск
 ```sh
 $ sudo nano /etc/network/interfaces
-$ sudo /etc/init.d/networking restart
+$ sudo ifdown eth0 && sudo ifup eth0
 ```
 
 #### SSH
