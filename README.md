@@ -4,10 +4,22 @@
 ### Сперва настройки редактора *nano*
 В `/etc/nanorc` прописать или расскоментировать значения:
 ```conf
-set autoident
+# set autoident (при копировании и вставке вызывает иногда проблему дополнительного отступа)
 set tabsize 4
 set tabtospaces
 set undo # где Alt+U - undo, Alt+E - redo
+```
+
+### Цвет левого промта, вывод текущей ветки в Git
+В `~/.bashrc` в конец дописать
+```conf
+function color_my_prompt {
+    local __git_branch='`git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`'
+    local __end='\[\033[00m\]\$ '
+
+    export PS1="\[\033[01;32m\]\u@\[\033[37m\]\h \[\033[01;36m\]\w \[\033[31m\]$__git_branch$__end"
+}
+color_my_prompt
 ```
 
 ### Системные настройки 
