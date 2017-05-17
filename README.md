@@ -193,17 +193,23 @@ $ sudo ln /home/username/conf/nginx.conf /etc/nginx/conf.d/username.conf
 ```
 
 ### Установка php и необходимых модулей 
-> модули php5-suhosin php5-apc не находит
 
 ```sh
-$ sudo apt-get install php5-cli php5-common php5-mysql php5-gd php5-fpm php5-cgi php5-mcrypt php5-curl php5-json
-
-$ sudo apt-get install php-pear php5-sqlite php5-redis php5-memcached php5-tidy php5-xmlrpc php5-xsl php5-mhash php5-pspell php5-snmp
+$ sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
 ```
 
-### Установка сервера mysql 5.6
 ```sh
-sudo apt-get install mysql-server-5.6 mysql-client-5.6
+$ sudo apt-get install php5.6-cli php5.6-common php5.6-mysql php5.6-gd php5.6-fpm php5.6-curl php5.6-json php5.6-mcrypt php5.6-sqlite3 php5.6-tidy php5.6-snmp php5.6-intl
+
+$ sudo apt-get install php7.0-cli php7.0-common php7.0-mysql php7.0-gd php7.0-fpm php7.0-curl php7.0-json php7.0-mcrypt php7.0-sqlite3 php7.0-tidy php7.0-snmp php7.0-intl
+
+$ sudo apt-get install php7.1-cli php7.1-common php7.1-mysql php7.1-gd php7.1-fpm php7.1-curl php7.1-json php7.1-mcrypt php7.1-sqlite3 php7.1-tidy php7.1-snmp php7.1-intl
+```
+
+### Установка сервера mysql 5.7
+```sh
+sudo apt-get install mysql-server-5.7 mysql-client-5.7
 ```
 
 ### настройка php-fpm
