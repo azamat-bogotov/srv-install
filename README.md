@@ -46,8 +46,15 @@ $ nano /etc/ssh/sshd_config
 ```conf
 Port 2222
 PermitRootLogin no
+#X11Forwarding yes
+#X11DisplayOffset 10
+TCPKeepAlive no
+MaxStartups 4:30:10
+Subsystem sftp internal-sftp
 AddressFamily inet
 AllowUsers username
+ClientAliveCountMax 3
+ClientAliveInterval 20
 ```
 
 Перезапуск сервиса
