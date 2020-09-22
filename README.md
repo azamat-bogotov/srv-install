@@ -27,7 +27,7 @@ color_my_prompt
 Установка пароля для root
 
 ```sh
-$ passwd root
+$ sudo passwd root
 ```
 
 Настройка сети и перезапуск
@@ -41,7 +41,7 @@ $ sudo ifdown eth0 && sudo ifup eth0
 - Отключение возможности подключаться к серверу от пользователя root;
 - Рользователи, которые погут подключаться к серверу по ssh;
 ```sh
-$ nano /etc/ssh/sshd_config
+$ sudo nano /etc/ssh/sshd_config
 ```
 ```conf
 Port 2222
@@ -59,19 +59,18 @@ ClientAliveInterval 20
 
 Перезапуск сервиса
 ```sh
-$ service ssh restart
+$ sudo service ssh restart
 ```
+> ! Необходимо открыть новую сессию и убедиться, что есть подключение после изменения настроек
 
 Обновление репозиториев
 ```sh
-$ apt-get update && apt-get-upgrade
+$ sudo apt-get update && sudo apt-get-upgrade
 ```
 
 Development Tools: gcc, g++, make, zip. 
 ```sh
-$ sudo apt-get install gcc g++ make zip
-# либо
-$ sudo apt-get install build-essential zip
+$ sudo apt-get install build-essential gcc g++ make zip
 ```
 
 ### nginx
@@ -94,7 +93,7 @@ $ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_sig
 
 Обновление репозиториев
 ```sh
-$ apt-get update
+$ sudo apt-get update
 ```
 
 > В случае, если будет ошибка вида: 
@@ -109,7 +108,7 @@ $ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5
 
 Обновление библиотек
 ```sh
-$ apt-get upgrade
+$ sudo apt-get upgrade
 ```
 
 Увеличение максимально возможного числа открытых файлов (глобально)
@@ -130,22 +129,22 @@ $ apt-get upgrade
 
 ```sh
 $ su root
-$ adduser username
-$ usermod -G username -a www-data
-$ usermod -G www-data -a username
+# adduser username
+# usermod -G username -a www-data
+# usermod -G www-data -a username
 
-$ su username; cd ~; mkdir html; mkdir logs; mkdir tmp; mkdir conf;
+# su username; cd ~; mkdir html; mkdir logs; mkdir tmp; mkdir conf;
 ```
 
 Удаление пользователя(если произошла ошибка при добавлении)
 ```sh
-$ userdel username
-$ rm -rf /home/username
+$ sudo userdel username
+$ sudo rm -rf /home/username
 ```
 
 Если нужно дать пользователю root привилегии
 ```sh
-$ visudo
+$ sudo visudo
 ```
 
 > При необходимости, добавить возможность пользователю соединяться через ssh
@@ -155,7 +154,7 @@ $ visudo
 
 ### Установка *nginx*
 ```sh
-$ apt-get install nginx
+$ sudo apt-get install nginx
 ```
 
 ### Настройка nginx.
@@ -202,6 +201,7 @@ $ sudo ln /home/username/conf/nginx.conf /etc/nginx/conf.d/username.conf
 ### Установка php и необходимых модулей 
 
 ```sh
+$ sudo apt-get install software-properties-common
 $ sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 ```
