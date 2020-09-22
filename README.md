@@ -218,6 +218,45 @@ $ sudo apt-get install php7.1-cli php7.1-common php7.1-mysql php7.1-gd php7.1-fp
 ```sh
 sudo apt-get install mysql-server-5.7 mysql-client-5.7
 ```
+Добавляем в конце файла `/etc/mysql/my.cnf` (нужные опции можно изменить исходя из требований):
+```conf
+[client]
+port            = 3306
+socket          = /var/run/mysqld/mysqld.sock
+
+[mysqld]
+open_files_limit = 102400
+sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+
+slow_query_log = 1
+long_query_time = 10
+slow_query_log_file = /var/log/mysql/mysql-slow.log
+
+tmp_table_size   = 32M
+#key_buffer       = 32M
+key_buffer_size  = 32M
+sort_buffer_size = 4M
+bulk_insert_buffer_size = 32M
+
+default_storage_engine         = InnoDB
+innodb_flush_method            = O_DIRECT
+innodb_log_files_in_group      = 3
+innodb_buffer_pool_size        = 128M
+innodb_flush_log_at_trx_commit = 2
+```
+
+Если необходимо предоставить доступ извне к mysql-серверу, то в файле `/etc/mysql/mysql.conf.d/mysqld.cnf` необходимо закомментировать строку
+```conf
+#bind-address		= 127.0.0.1
+```
+
+Чтобы не было ошибок при множестве одновременных запросов увеличиваем значение макс. открытых дескрипторов на файлы для mysql с 1024 до 102400 (глобальные настроки не воспринимаются). Для этого добавляем каталог и файл, если их не существуют `/etc/systemd/system/mysql.service.d/nofile.conf`, и прописываем там:
+```conf
+[Service]
+LimitNOFILE=102400
+```
+После перезапуска mysql, надо убедиться, что настройки изменились `SHOW VARIABLES LIKE 'open_files_limit';`
+
 
 ### настройка php-fpm
 
