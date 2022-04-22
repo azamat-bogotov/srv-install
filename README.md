@@ -209,9 +209,7 @@ sudo apt-get update
 ```sh
 $ sudo apt-get install php5.6-cli php5.6-common php5.6-mysql php5.6-gd php5.6-fpm php5.6-curl php5.6-json php5.6-mcrypt php5.6-sqlite3 php5.6-tidy php5.6-snmp php5.6-intl
 
-$ sudo apt-get install php7.0-cli php7.0-common php7.0-mysql php7.0-gd php7.0-fpm php7.0-curl php7.0-json php7.0-mcrypt php7.0-sqlite3 php7.0-tidy php7.0-snmp php7.0-intl
-
-$ sudo apt-get install php7.1-cli php7.1-common php7.1-mysql php7.1-gd php7.1-fpm php7.1-curl php7.1-json php7.1-mcrypt php7.1-sqlite3 php7.1-tidy php7.1-snmp php7.1-intl
+$ sudo apt-get install php7.4-cli php7.4-common php7.4-mysql php7.4-gd php7.4-fpm php7.4-curl php7.4-json php7.4-mcrypt php7.4-sqlite3 php7.4-tidy php7.4-snmp php7.4-intl php7.4-mbstring php7.4-xml php7.4-zip
 ```
 
 ### Установка сервера mysql 5.7
