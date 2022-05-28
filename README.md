@@ -76,7 +76,9 @@ $ sudo apt-get install build-essential gcc g++ make zip
 ### nginx
 Добавление ключа для доступа к репозиторию *nginx*
 ```sh
-$ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_signing.key; rm nginx_signing.key
+$ curl -s http://nginx.org/keys/nginx_signing.key | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/nginx.gpg --import
+$ sudo chmod 644 /etc/apt/trusted.gpg.d/nginx.gpg
+
 ```
 
 Добавление репозиториев для скачивания последней стабильной версии nginx
@@ -85,26 +87,16 @@ $ cd ~; wget http://nginx.org/keys/nginx_signing.key; sudo apt-key add nginx_sig
 >
 > там же в `/etc/apt/sources.list` добавить репозитории nginx:
 > ```
-> deb http://nginx.org/packages/ubuntu/ trusty nginx
-> deb-src http://nginx.org/packages/ubuntu/ trusty nginx
+> deb [arch=amd64] http://nginx.org/packages/ubuntu/ gammy nginx
+> deb-src http://nginx.org/packages/ubuntu/ gammy nginx
 >```
-> где *trusty* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*.
+> где *gammy* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*.
 > Обо все этом подробнее [здесь](http://nginx.org/ru/linux_packages.html#stable)
 
 Обновление репозиториев
 ```sh
 $ sudo apt-get update
 ```
-
-> В случае, если будет ошибка вида: 
-```
-Ошибка GPG: http://extras.ubuntu.com trusty Release ... 40976EAF437D05B5
-```
-> то следует добавить ключ
-```sh
-$ sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 40976EAF437D05B5
-```
-> заменив *40976EAF437D05B5* на выданное в ошибке значение
 
 Обновление библиотек
 ```sh
