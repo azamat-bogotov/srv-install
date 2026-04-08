@@ -144,8 +144,7 @@ root hard nofile 1048576
 ```sh
 $ su root
 # adduser username
-# usermod -G username -a www-data
-# usermod -G www-data -a username
+# usermod -aG nginx username
 
 # su username; cd ~; mkdir html; mkdir logs; mkdir tmp; mkdir conf;
 ```
@@ -171,7 +170,7 @@ $ sudo visudo
 Открыть для редактирования главный файл настроек nginx: */etc/nginx/nginx.conf* и поменять значения:
 
 ```conf
-user www-data;
+user nginx;
 worker_processes 2; # число физических процессорных ядер
 
 events {
@@ -181,6 +180,10 @@ events {
 }
 
 http {
+    log_format common '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent", x-forwaded-for[$http_x_forwarded_for]';
+                      
     #...
     #access_log  /var/log/nginx/access.log  main;
     access_log off;
@@ -207,18 +210,50 @@ $ sudo rm -Rf /etc/nginx/conf.d/
 $ sudo ln /home/username/conf/nginx.conf /etc/nginx/conf.d/username.conf
 ```
 
+### Отключить ipv6
+> без этого add-apt-repository ppa:ondrej/php может не сработать
+
+```sh
+# добавить /etc/sysctl.conf:
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+```
+И в настройках сетевого подключения:
+```sh
+sudo nano /etc/netplan/99-disable-ipv6.yaml
+# вставить это (eth0 может отличаться, надо проверить название в системе)
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp6: false
+      accept-ra: false
+      link-local: []
+      
+sudo chmod 0600 /etc/netplan/99-disable-ipv6.yaml
+
+# проверка
+sudo netplan try
+# Если всё ок, то:
+sudo netplan apply
+```
+
 ### Установка php и необходимых модулей 
 
 ```sh
-$ sudo apt-get install software-properties-common
+$ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:ondrej/php
-sudo apt-get update
+sudo apt update
 ```
 
 ```sh
-$ sudo apt-get install php5.6-cli php5.6-common php5.6-mysql php5.6-gd php5.6-fpm php5.6-curl php5.6-json php5.6-mcrypt php5.6-sqlite3 php5.6-tidy php5.6-snmp php5.6-intl
+sudo apt install php5.6-cli php5.6-common php5.6-mysql php5.6-gd php5.6-fpm php5.6-curl php5.6-json php5.6-mcrypt php5.6-sqlite3 php5.6-tidy php5.6-snmp php5.6-intl
 
-$ sudo apt-get install php7.4-cli php7.4-common php7.4-mysql php7.4-gd php7.4-fpm php7.4-curl php7.4-json php7.4-mcrypt php7.4-sqlite3 php7.4-tidy php7.4-snmp php7.4-intl php7.4-mbstring php7.4-xml php7.4-zip
+sudo apt install php7.4-cli php7.4-common php7.4-mysql php7.4-gd php7.4-fpm php7.4-curl php7.4-json php7.4-mcrypt php7.4-sqlite3 php7.4-tidy php7.4-snmp php7.4-intl php7.4-mbstring php7.4-xml php7.4-zip
+
+sudo apt install php8.4-cli php8.4-common php8.4-mysql php8.4-gd php8.4-fpm php8.4-curl php8.4-mcrypt php8.4-sqlite3 php8.4-tidy php8.4-snmp php8.4-intl php8.4-mbstring php8.4-xml php8.4-zip php8.4-bcmath php8.4-readline php8.4-dev
 ```
 
 ### Установка сервера mysql 5.7
@@ -294,8 +329,8 @@ listen = /var/run/php5-fpm.{project_name}.sock
 listen = 127.0.0.1:9000 # свой порт для каждого пула процесов :9001, :9002, ...
 
 ; Владелец Unix-сокета, его группа и права доступа к сокету
-listen.owner = www-data
-listen.group = www-data
+listen.owner = nginx
+listen.group = nginx
 listen.mode = 0660
 
 ; Динамический менеджер рабочих процессов
@@ -423,7 +458,7 @@ server {
 
 ### перезапуск всех сервисов
 ```sh
-$ sudo service php5-fpm restart
+$ sudo service php8-fpm restart
 $ sudo service mysql restart
 $ sudo service nginx restart
 ```
