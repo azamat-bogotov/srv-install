@@ -22,6 +22,16 @@ function color_my_prompt {
 color_my_prompt
 ```
 
+Обновление репозиториев
+```sh
+sudo apt update && sudo apt upgrade
+```
+
+Development Tools: gcc, g++, make, zip. 
+```sh
+$ sudo apt install build-essential gcc g++ make zip curl net-tools
+```
+
 ### Системные настройки 
 
 Установка пароля для root
@@ -52,26 +62,23 @@ TCPKeepAlive no
 MaxStartups 4:30:10
 Subsystem sftp internal-sftp
 AddressFamily inet
-AllowUsers username
 ClientAliveCountMax 3
 ClientAliveInterval 20
+AllowUsers username1 username2
 ```
 
 Перезапуск сервиса
 ```sh
-$ sudo service ssh restart
+sudo systemctl stop ssh.socket
+sudo systemctl disable ssh.socket
+sudo systemctl enable ssh.service
+sudo systemctl restart ssh.service
+
+# в новых версиях можно так, не отключая ssh.socket
+sudo systemctl daemon-reload
+sudo systemctl restart ssh.socket
 ```
 > ! Необходимо открыть новую сессию и убедиться, что есть подключение после изменения настроек
-
-Обновление репозиториев
-```sh
-$ sudo apt-get update && sudo apt-get-upgrade
-```
-
-Development Tools: gcc, g++, make, zip. 
-```sh
-$ sudo apt-get install build-essential gcc g++ make zip
-```
 
 ### nginx
 Добавление ключа для доступа к репозиторию *nginx*
@@ -249,8 +256,6 @@ sudo apt update
 ```
 
 ```sh
-sudo apt install php5.6-cli php5.6-common php5.6-mysql php5.6-gd php5.6-fpm php5.6-curl php5.6-json php5.6-mcrypt php5.6-sqlite3 php5.6-tidy php5.6-snmp php5.6-intl
-
 sudo apt install php7.4-cli php7.4-common php7.4-mysql php7.4-gd php7.4-fpm php7.4-curl php7.4-json php7.4-mcrypt php7.4-sqlite3 php7.4-tidy php7.4-snmp php7.4-intl php7.4-mbstring php7.4-xml php7.4-zip
 
 sudo apt install php8.4-cli php8.4-common php8.4-mysql php8.4-gd php8.4-fpm php8.4-curl php8.4-mcrypt php8.4-sqlite3 php8.4-tidy php8.4-snmp php8.4-intl php8.4-mbstring php8.4-xml php8.4-zip php8.4-bcmath php8.4-readline php8.4-dev
@@ -291,7 +296,7 @@ php -m | grep -E 'sqlsrv|pdo_sqlsrv'
 
 ### Установка сервера mysql 5.7
 ```sh
-sudo apt-get install mysql-server-5.7 mysql-client-5.7
+sudo apt install mysql-server-5.7 mysql-client-5.7
 ```
 Добавляем в конце файла `/etc/mysql/my.cnf` (нужные опции можно изменить исходя из требований):
 ```conf
@@ -499,6 +504,6 @@ $ sudo service nginx restart
 ### Установка последней версии git
 ```sh
 $ sudo add-apt-repository ppa:git-core/ppa
-$ sudo apt-get update
-$ sudo apt-get install git
+$ sudo apt update
+$ sudo apt install git
 ```
