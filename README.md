@@ -156,6 +156,23 @@ $ su root
 # su username; cd ~; mkdir html; mkdir logs; mkdir tmp; mkdir conf;
 ```
 
+Настройки прав для nginx:
+```sh
+sudo apt install -y acl
+
+# право на вход в /home/username
+sudo setfacl -m u:nginx:--x /home/username
+# новые папки/файлы в /home/username тоже наследовали это право (опционально)
+sudo setfacl -d -m u:nginx:--x /home/username
+
+sudo setfacl -R -m u:nginx:rx /home/username/html
+sudo setfacl -R -d -m u:nginx:rx /home/username/html
+
+sudo chown -R username:username /home/username/html
+sudo chmod -R 775 /home/username/html
+sudo find /home/username/html -type f -exec chmod 664 {} \;
+```
+
 Удаление пользователя(если произошла ошибка при добавлении)
 ```sh
 $ sudo userdel username
