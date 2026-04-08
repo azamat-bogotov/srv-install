@@ -75,38 +75,60 @@ $ sudo apt-get install build-essential gcc g++ make zip
 
 ### nginx
 Добавление ключа для доступа к репозиторию *nginx*
-```sh
-$ curl -s http://nginx.org/keys/nginx_signing.key | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/nginx.gpg --import
-$ sudo chmod 644 /etc/apt/trusted.gpg.d/nginx.gpg
 
+```sh
+curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/nginx.sources
+Types: deb
+URIs: https://nginx.org/packages/ubuntu
+Suites: $(lsb_release -cs)
+Components: nginx
+Architectures: $(dpkg --print-architecture)
+Signed-By: /usr/share/keyrings/nginx-archive-keyring.gpg
+EOF
+
+cat <<EOF | sudo tee /etc/apt/preferences.d/99nginx
+Package: *
+Pin: origin nginx.org
+Pin: release o=nginx
+Pin-Priority: 900
+EOF
 ```
 
-Добавление репозиториев для скачивания последней стабильной версии nginx
+<details>
+  <summary>ubuntu 22.04 и ниже</summary>
 
-> Раскомментировать репозитории `canonical` и `ubuntu` в `/etc/apt/sources.list`, дожны быть в конце файла.
->
-> там же в `/etc/apt/sources.list` добавить репозитории nginx:
-> ```
-> deb [arch=amd64] http://nginx.org/packages/ubuntu/ gammy nginx
-> deb-src http://nginx.org/packages/ubuntu/ gammy nginx
->```
-> где *gammy* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*.
-> Обо все этом подробнее [здесь](http://nginx.org/ru/linux_packages.html#stable)
+    curl -s http://nginx.org/keys/nginx_signing.key | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/nginx.gpg --import
+    sudo chmod 644 /etc/apt/trusted.gpg.d/nginx.gpg
+
+    Добавление репозиториев для скачивания последней стабильной версии nginx
+
+    > Раскомментировать репозитории `canonical` и `ubuntu` в `/etc/apt/sources.list`, дожны быть в конце файла.
+    >
+    > там же в `/etc/apt/sources.list` добавить репозитории nginx:
+    > ```
+    > deb [arch=amd64] http://nginx.org/packages/ubuntu/ gammy nginx
+    > deb-src http://nginx.org/packages/ubuntu/ gammy nginx
+    >```
+    > где *gammy* - это кодовое название версии ubuntu, для 14.04 это "trusty", для 12.04 *precise*.
+    > Обо все этом подробнее [здесь](http://nginx.org/ru/linux_packages.html#stable)
+</details>
 
 Обновление репозиториев
 ```sh
-$ sudo apt-get update
-```
-
-Обновление библиотек
-```sh
-$ sudo apt-get upgrade
+$ sudo apt update
+$ sudo apt policy nginx
+$ sudo apt install nginx
 ```
 
 Увеличение максимально возможного числа открытых файлов (глобально)
 > надо прописать в конце файла `/etc/security/limits.conf`:
  ```
-* - nofile 1048576
+* soft nofile 1048576
+* hard nofile 1048576
+root soft nofile 1048576
+root hard nofile 1048576
 ```
 - - -
 
@@ -143,11 +165,6 @@ $ sudo visudo
 > в `/etc/ssh/sshd_config` в секции *AllowUsers*.
 
  - - - 
-
-### Установка *nginx*
-```sh
-$ sudo apt-get install nginx
-```
 
 ### Настройка nginx.
 
