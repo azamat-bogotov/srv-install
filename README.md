@@ -256,6 +256,39 @@ sudo apt install php7.4-cli php7.4-common php7.4-mysql php7.4-gd php7.4-fpm php7
 sudo apt install php8.4-cli php8.4-common php8.4-mysql php8.4-gd php8.4-fpm php8.4-curl php8.4-mcrypt php8.4-sqlite3 php8.4-tidy php8.4-snmp php8.4-intl php8.4-mbstring php8.4-xml php8.4-zip php8.4-bcmath php8.4-readline php8.4-dev
 ```
 
+### Устанавливка драйвера для MSSQL
+Сначала ставим Microsoft ODBC Driver и зависимости:
+```sh
+# Добавляем ключ и репозиторий Microsoft
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+
+curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+
+sudo apt update
+
+# Устанавливаем ODBC-драйвер и unixodbc-dev (нужен для сборки pecl)
+sudo ACCEPT_EULA=Y apt install -y msodbcsql18 unixodbc-dev
+```
+
+Теперь собираем расширения sqlsrv и pdo_sqlsrv через PECL:
+```sh
+sudo pecl install sqlsrv
+sudo pecl install pdo_sqlsrv
+
+sudo bash -c 'printf "; priority=20\nextension=sqlsrv.so\n" > /etc/php/8.4/mods-available/sqlsrv.ini'
+sudo bash -c 'printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /etc/php/8.4/mods-available/pdo_sqlsrv.ini'
+
+sudo phpenmod -v 8.4 sqlsrv pdo_sqlsrv
+sudo systemctl restart php8.4-fpm
+```
+Проверка:
+```sh
+php -m | grep -E 'sqlsrv|pdo_sqlsrv'
+# Должно вывести:
+# sqlsrv
+# pdo_sqlsrv
+```
+
 ### Установка сервера mysql 5.7
 ```sh
 sudo apt-get install mysql-server-5.7 mysql-client-5.7
